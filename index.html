@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b3d91">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AP Protensão">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="AP Protensão">
+<title>AP Protensão — Laje Protendida</title>
+<link rel="manifest" id="manifest-link">
+<link rel="apple-touch-icon" id="apple-icon" sizes="180x180">
+<link rel="icon" id="favicon-link" type="image/svg+xml">
+<style>
+  :root{
+    --azul:#0b3d91; --azul2:#1560c4; --azul3:#e8f0fb;
+    --cinza:#4b5563; --cinza2:#e5e7eb; --cinza3:#f3f4f6;
+    --branco:#ffffff; --texto:#111827;
+    --ok:#16a34a; --at:#d97706; --no:#dc2626;
+    --sombra:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+    --sombra2:0 10px 25px rgba(0,0,0,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--cinza3); color:var(--texto);
+    font-size:14px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  header.top{
+    background:linear-gradient(135deg,var(--azul) 0%, var(--azul2) 100%);
+    color:#fff; padding:12px 18px;
+    display:flex; align-items:center; gap:14px;
+    position:sticky; top:0; z-index:100;
+    box-shadow:var(--sombra2);
+  }
+  header.top .logo{
+    width:42px;height:42px;border-radius:10px;background:rgba(255,255,255,.15);
+    display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:.5px;
+  }
+  header.top .titles h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.2px}
+  header.top .titles p{font-size:11.5px;margin:0;opacity:.85}
+  header.top .spacer{flex:1}
+  header.top .pill{
+    background:rgba(255,255,255,.15); padding:5px 10px; border-radius:999px; font-size:11px;
+    border:1px solid rgba(255,255,255,.2);
+  }
+  .layout{display:flex; min-height:calc(100vh - 66px);}
+  nav.side{
+    width:238px; background:var(--branco); border-right:1px solid var(--cinza2);
+    padding:14px 10px; position:sticky; top:66px; align-self:flex-start;
+    height:calc(100vh - 66px); overflow-y:auto;
+  }
+  nav.side button{
+    display:flex; align-items:center; gap:10px; width:100%;
+    background:transparent; border:0; padding:10px 12px; border-radius:8px;
+    font-size:13.5px; color:var(--cinza); cursor:pointer; text-align:left;
+    font-family:inherit; margin-bottom:2px; transition:background .12s;
+  }
+  nav.side button:hover{background:var(--cinza3)}
+  nav.side button.active{background:var(--azul3); color:var(--azul); font-weight:600}
+  nav.side button .ic{width:18px;text-align:center;opacity:.8}
+  main{flex:1; padding:20px 26px 60px; max-width:1300px; margin:0 auto; width:100%}
+  .section{display:none}
+  .section.active{display:block; animation:fade .18s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none}}
+  .card{
+    background:var(--branco); border-radius:12px; padding:18px 20px;
+    box-shadow:var(--sombra); margin-bottom:16px; border:1px solid #eef2f7;
+  }
+  .card h2{margin:0 0 4px; font-size:16px; color:var(--azul)}
+  .card h2 + .sub{font-size:12px; color:var(--cinza); margin-bottom:14px}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px}
+  .grid.g2{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+  .field{display:flex; flex-direction:column; gap:4px}
+  .field label{font-size:11.5px; color:var(--cinza); font-weight:600; letter-spacing:.2px}
+  .field input, .field select{
+    border:1px solid var(--cinza2); border-radius:7px; padding:8px 10px;
+    font-size:13.5px; font-family:inherit; background:#fbfcfe; width:100%;
+    transition:border .12s, box-shadow .12s;
+  }
+  .field input:focus, .field select:focus{
+    outline:0; border-color:var(--azul2); box-shadow:0 0 0 3px rgba(21,96,196,.12); background:#fff;
+  }
+  .field .unit{font-size:10.5px; color:#94a3b8; margin-left:4px; font-weight:400}
+  .row{display:flex; gap:12px; flex-wrap:wrap}
+  .btn{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--azul); color:#fff; border:0; padding:9px 16px;
+    border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;
+    font-family:inherit; transition:filter .12s, transform .05s;
+  }
+  .btn:hover{filter:brightness(1.08)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--azul);border:1px solid var(--azul2)}
+  .btn.ghost:hover{background:var(--azul3)}
+  .btn.gray{background:#6b7280}
+  .btn.green{background:var(--ok)}
+  .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px}
+  .kpi{
+    background:#fff; border:1px solid #eef2f7; border-radius:10px; padding:12px 14px;
+    box-shadow:var(--sombra); position:relative;
+  }
+  .kpi .lbl{font-size:11px; color:var(--cinza); text-transform:uppercase; letter-spacing:.4px; font-weight:600}
+  .kpi .val{font-size:21px; font-weight:700; color:var(--azul); margin-top:3px; line-height:1.1}
+  .kpi .val small{font-size:12px;color:var(--cinza);font-weight:500;margin-left:3px}
+  .kpi .st{position:absolute; top:10px; right:10px; width:10px; height:10px; border-radius:50%; background:#cbd5e1}
+  .kpi .st.ok{background:var(--ok)} .kpi .st.at{background:var(--at)} .kpi .st.no{background:var(--no)}
+  .kpi .det{font-size:11px; color:var(--cinza); margin-top:6px}
+  table.tbl{width:100%; border-collapse:collapse; font-size:13px}
+  table.tbl th, table.tbl td{padding:8px 10px; text-align:left; border-bottom:1px solid #eef2f7}
+  table.tbl th{background:#f8fafc; color:var(--cinza); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.3px}
+  table.tbl td.num{text-align:right; font-variant-numeric:tabular-nums}
+  canvas.chart{width:100%; display:block}
+  .chart-wrap{position:relative; margin-top:10px}
+  .chart-tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px}
+  .chart-tabs button{
+    background:#fff; border:1px solid var(--cinza2); padding:6px 12px;
+    border-radius:999px; font-size:12px; cursor:pointer; font-family:inherit; color:var(--cinza);
+  }
+  .chart-tabs button.active{background:var(--azul); color:#fff; border-color:var(--azul)}
+  pre.code{
+    background:#0f172a; color:#e2e8f0; padding:12px 14px; border-radius:8px;
+    font-size:12px; overflow-x:auto; font-family:ui-monospace,Menlo,Consolas,monospace;
+    line-height:1.55;
+  }
+  .note{font-size:12px; color:var(--cinza); background:#f8fafc; border-left:3px solid var(--azul2); padding:8px 12px; border-radius:0 6px 6px 0; margin-top:10px}
+  .warn{font-size:12px; background:#fef3c7; border-left:3px solid var(--at); padding:8px 12px; border-radius:0 6px 6px 0; margin-top:10px; color:#78350f}
+  .prog{height:6px; background:var(--cinza2); border-radius:3px; overflow:hidden; margin:10px 0}
+  .prog > i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--azul2),var(--azul)); transition:width .3s}
+  .steps{display:flex;flex-wrap:wrap;gap:6px;font-size:11.5px;color:var(--cinza)}
+  .steps span{padding:3px 8px;background:#f1f5f9;border-radius:999px}
+  .steps span.done{background:#dcfce7;color:#166534}
+  footer.app{padding:16px 24px;color:#64748b;font-size:11.5px;text-align:center;border-top:1px solid var(--cinza2);background:#fff;margin-top:20px}
+  footer.app strong{color:var(--azul)}
+  @media (max-width:840px){
+    nav.side{
+      position:fixed;bottom:0;left:0;right:0;top:auto;width:100%;height:auto;
+      max-height:58vh;overflow-y:auto;border-right:0;border-top:1px solid var(--cinza2);
+      z-index:90;padding:8px;display:none;
+    }
+    nav.side.open{display:block}
+    main{padding:14px 14px 90px}
+    header.top .pill{display:none}
+    .menu-btn{display:flex !important}
+    .layout{display:block}
+  }
+  .menu-btn{
+    display:none; background:rgba(255,255,255,.15); border:0; color:#fff;
+    width:38px;height:38px;border-radius:8px;align-items:center;justify-content:center;
+    font-size:18px;cursor:pointer;
+  }
+  .toast{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:#111827; color:#fff; padding:10px 18px; border-radius:8px; font-size:13px;
+    opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; z-index:200;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="logo">AP</div>
+  <div class="titles">
+    <h1>AP Protensão — Laje Protendida</h1>
+    <p>Cálculo e análise de lajes protendidas — NBR 6118:2023</p>
+  </div>
+  <div class="spacer"></div>
+  <span class="pill" id="installPill" style="display:none">Instalar App</span>
+  <button class="menu-btn" id="menuBtn">☰</button>
+</header>
+
+<div class="layout">
+  <nav class="side" id="sideNav">
+    <button data-sec="projeto" class="active"><span class="ic">📁</span> Projeto</button>
+    <button data-sec="geometria"><span class="ic">📐</span> Geometria</button>
+    <button data-sec="materiais"><span class="ic">🧱</span> Materiais</button>
+    <button data-sec="cargas"><span class="ic">⚖️</span> Cargas</button>
+    <button data-sec="protensao"><span class="ic">🔩</span> Protensão</button>
+    <button data-sec="cabos"><span class="ic">〰️</span> Traçado do Cabo</button>
+    <button data-sec="analise"><span class="ic">📊</span> Análise Estrutural</button>
+    <button data-sec="verificacoes"><span class="ic">✅</span> Verificações</button>
+    <button data-sec="detalhamento"><span class="ic">🧩</span> Detalhamento</button>
+    <button data-sec="memorial"><span class="ic">📄</span> Memorial</button>
+    <button data-sec="resumo"><span class="ic">🏁</span> Resumo Final</button>
+  </nav>
+
+  <main>
+
+    <section class="section active" id="sec-projeto">
+      <div class="card">
+        <h2>Projeto</h2>
+        <div class="sub">Dados de identificação e gestão do projeto.</div>
+        <div class="grid g2">
+          <div class="field"><label>Nome do projeto</label><input id="pNome" value="Laje protendida — Exemplo"></div>
+          <div class="field"><label>Cliente / Obra</label><input id="pCliente" value="—"></div>
+          <div class="field"><label>Responsável técnico</label><input id="pResp" value="Eng. Civil — CREA"></div>
+          <div class="field"><label>Data</label><input id="pData" type="date"></div>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" id="btnNovo">➕ Novo</button>
+          <button class="btn ghost" id="btnSalvar">💾 Salvar</button>
+          <button class="btn ghost" id="btnAbrir">📂 Abrir</button>
+          <button class="btn ghost" id="btnExportJSON">⬇ Exportar JSON</button>
+          <button class="btn ghost" id="btnImportJSON">⬆ Importar JSON</button>
+          <input type="file" id="fileImport" accept=".json" style="display:none">
+        </div>
+        <div class="note">Os dados são salvos localmente no dispositivo (localStorage) e permanecem disponíveis offline.</div>
+      </div>
+
+      <div class="card">
+        <h2>Ações Rápidas</h2>
+        <div class="sub">Pré-dimensionamento inicial e cálculo completo.</div>
+        <div class="row">
+          <button class="btn green" id="btnPreDim">⚡ PRÉ-DIMENSIONAR</button>
+          <button class="btn" id="btnCalcular">▶ CALCULAR PROJETO</button>
+          <button class="btn gray" id="btnPDF">📄 Gerar PDF / Imprimir</button>
+        </div>
+        <div class="prog"><i id="progBar"></i></div>
+        <div class="steps" id="stepsBox">
+          <span data-step="geom">Geometria</span><span data-step="mat">Materiais</span>
+          <span data-step="carga">Cargas</span><span data-step="prot">Protensão</span>
+          <span data-step="perdas">Perdas</span><span data-step="analise">Análise</span>
+          <span data-step="elu">ELU</span><span data-step="els">ELS</span>
+          <span data-step="flecha">Flecha</span><span data-step="punc">Punção</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-geometria">
+      <div class="card">
+        <h2>Geometria da Laje</h2>
+        <div class="sub">Dimensões em planta e seção transversal (faixa de cálculo de 1,00 m).</div>
+        <div class="grid">
+          <div class="field"><label>Vão Lx <span class="unit">(m)</span></label><input type="number" step="0.01" id="gLx" value="6.00"></div>
+          <div class="field"><label>Vão Ly <span class="unit">(m)</span></label><input type="number" step="0.01" id="gLy" value="8.00"></div>
+          <div class="field"><label>Espessura h <span class="unit">(cm)</span></label><input type="number" step="0.5" id="gH" value="20"></div>
+          <div class="field"><label>Largura de cálculo b <span class="unit">(cm)</span></label><input type="number" step="1" id="gB" value="100"></div>
+          <div class="field"><label>Cobrimento c <span class="unit">(cm)</span></label><input type="number" step="0.5" id="gC" value="2.5"></div>
+          <div class="field"><label>Sistema estrutural</label>
+            <select id="gSis">
+              <option value="simples">Laje simplesmente apoiada</option>
+              <option value="continua">Laje contínua</option>
+              <option value="engastada">Engastada-apoiada</option>
+              <option value="biengastada">Biengastada</option>
+              <option value="balanco">Balanço</option>
+            </select>
+          </div>
+          <div class="field"><label>Direção</label>
+            <select id="gDir"><option value="uni">Unidirecional</option><option value="bi">Bidirecional (simplificado)</option></select>
+          </div>
+        </div>
+        <div class="note" id="geoNote"></div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-materiais">
+      <div class="card">
+        <h2>Concreto</h2>
+        <div class="sub">Propriedades segundo NBR 6118:2023 (item 8.2).</div>
+        <div class="grid">
+          <div class="field"><label>Classe do concreto</label>
+            <select id="mFck">
+              <option>20</option><option>25</option><option>30</option><option selected>35</option>
+              <option>40</option><option>45</option><option>50</option><option>60</option>
+            </select>
+          </div>
+          <div class="field"><label>γ<sub>c</sub> concreto <span class="unit">(kN/m³)</span></label><input type="number" step="0.5" id="mGammaC" value="25"></div>
+          <div class="field"><label>α<sub>E</sub> agregado</label>
+            <select id="mAlphaE"><option value="1.0" selected>1,0 — Granito/Gnaisse</option><option value="1.2">1,2 — Basalto/Diabásio</option><option value="0.9">0,9 — Calcário</option><option value="0.7">0,7 — Arenito</option></select>
+          </div>
+        </div>
+        <div class="note" id="matNote"></div>
+      </div>
+
+      <div class="card">
+        <h2>Aço Passivo</h2>
+        <div class="grid">
+          <div class="field"><label>Categoria</label>
+            <select id="mCategoria"><option>CA-50</option><option>CA-60</option></select>
+          </div>
+          <div class="field"><label>Ø longitudinal <span class="unit">(mm)</span></label>
+            <select id="mPhiLong"><option>6.3</option><option>8</option><option selected>10</option><option>12.5</option><option>16</option><option>20</option></select>
+          </div>
+          <div class="field"><label>Ø transversal <span class="unit">(mm)</span></label>
+            <select id="mPhiTrans"><option selected>6.3</option><option>8</option><option>10</option></select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-cargas">
+      <div class="card">
+        <h2>Cargas Permanentes</h2>
+        <div class="sub">Peso próprio calculado automaticamente.</div>
+        <div class="grid">
+          <div class="field"><label>γ<sub>c</sub> <span class="unit">(kN/m³)</span></label><input type="number" step="0.5" id="cGammaC" value="25"></div>
+          <div class="field"><label>Revestimento <span class="unit">(kN/m²)</span></label><input type="number" step="0.1" id="cRev" value="1.5"></div>
+          <div class="field"><label>Contrapiso — esp. <span class="unit">(cm)</span></label><input type="number" step="0.5" id="cContE" value="4"></div>
+          <div class="field"><label>Contrapiso — γ <span class="unit">(kN/m³)</span></label><input type="number" step="0.5" id="cContG" value="21"></div>
+          <div class="field"><label>Forro / outros <span class="unit">(kN/m²)</span></label><input type="number" step="0.1" id="cOutros" value="0.3"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Paredes Lineares</h2>
+        <div class="grid">
+          <div class="field"><label>Altura da parede <span class="unit">(m)</span></label><input type="number" step="0.05" id="cParH" value="2.8"></div>
+          <div class="field"><label>Espessura <span class="unit">(m)</span></label><input type="number" step="0.05" id="cParE" value="0.15"></div>
+          <div class="field"><label>γ alvenaria <span class="unit">(kN/m³)</span></label><input type="number" step="0.5" id="cParG" value="13"></div>
+          <div class="field"><label>Comprimento total <span class="unit">(m)</span></label><input type="number" step="0.1" id="cParL" value="0"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Sobrecarga de Utilização</h2>
+        <div class="grid">
+          <div class="field"><label>q — sobrecarga <span class="unit">(kN/m²)</span></label><input type="number" step="0.1" id="cQ" value="3.0"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Combinações (coeficientes)</h2>
+        <div class="grid">
+          <div class="field"><label>γ<sub>g</sub> (ELU)</label><input type="number" step="0.05" id="cGG" value="1.4"></div>
+          <div class="field"><label>γ<sub>q</sub> (ELU)</label><input type="number" step="0.05" id="cGQ" value="1.4"></div>
+          <div class="field"><label>ψ<sub>2</sub> (quase perm.)</label><input type="number" step="0.05" id="cPsi2" value="0.3"></div>
+          <div class="field"><label>ψ<sub>1</sub> (frequente)</label><input type="number" step="0.05" id="cPsi1" value="0.4"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-protensao">
+      <div class="card">
+        <h2>Sistema de Protensão</h2>
+        <div class="grid">
+          <div class="field"><label>Tipo</label>
+            <select id="pTipo"><option value="post">Pós-tração</option><option value="pre">Pré-tração</option></select>
+          </div>
+          <div class="field"><label>Aderência</label>
+            <select id="pAder"><option value="aderente">Aderente</option><option value="nao">Não aderente</option></select>
+          </div>
+          <div class="field"><label>Cordoalha / Fio</label>
+            <select id="pCord">
+              <option value="12.7|0.987|1900|1670|195">CP-190 RB Ø12,7 mm (Ap=0,987 cm²)</option>
+              <option value="12.7|1.012|1900|1670|195">CP-190 RB Ø12,7 mm (Ap=1,012 cm²)</option>
+              <option value="15.2|1.400|1900|1670|195">CP-190 RB Ø15,2 mm (Ap=1,40 cm²)</option>
+              <option value="9.5|0.549|1900|1670|195">CP-190 RB Ø9,5 mm (Ap=0,549 cm²)</option>
+              <option value="12.7|0.987|1900|1670|200">CP-190 RN Ø12,7 mm (relax. normal)</option>
+            </select>
+          </div>
+          <div class="field"><label>Nº de cordoalhas / cabo</label><input type="number" step="1" id="pN" value="4"></div>
+          <div class="field"><label>Nº de cabos</label><input type="number" step="1" id="pNCabos" value="5"></div>
+          <div class="field"><label>Excentricidade e <span class="unit">(cm)</span></label><input type="number" step="0.5" id="pE" value="8"></div>
+          <div class="field"><label>σ<sub>p0</sub> inicial <span class="unit">(MPa)</span></label><input type="number" step="10" id="pSigma0" value="1400"></div>
+        </div>
+        <div class="note" id="protNote"></div>
+      </div>
+      <div class="card">
+        <h2>Perdas de Protensão</h2>
+        <div class="grid">
+          <div class="field"><label>μ — atrito</label><input type="number" step="0.01" id="pMu" value="0.20"></div>
+          <div class="field"><label>k — desvio <span class="unit">(1/m)</span></label><input type="number" step="0.001" id="pK" value="0.002"></div>
+          <div class="field"><label>Escorregamento <span class="unit">(mm)</span></label><input type="number" step="0.5" id="pSlip" value="6"></div>
+          <div class="field"><label>ε<sub>cs</sub> retração (‰)</label><input type="number" step="0.01" id="pEcs" value="-0.20"></div>
+          <div class="field"><label>φ — fluência</label><input type="number" step="0.1" id="pPhi" value="2.0"></div>
+          <div class="field"><label>ρ — relaxação <span class="unit">(%)</span></label><input type="number" step="0.1" id="pRelax" value="2.5"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= TRAÇADO DO CABO — NOVO ======================= -->
+    <section class="section" id="sec-cabos">
+      <div class="card">
+        <h2>Traçado do Cabo — Seção Longitudinal da Laje</h2>
+        <div class="sub">Seção da laje com o cabo de protensão, armadura passiva, cobrimentos, ancoragens e carga de balanceamento w<sub>p</sub>.</div>
+        <div class="grid">
+          <div class="field"><label>Forma do traçado</label>
+            <select id="cabForma">
+              <option value="parabolico" selected>Parabólico</option>
+              <option value="reto">Reto (e constante)</option>
+              <option value="segmentado">Segmentado (linear)</option>
+            </select>
+          </div>
+          <div class="field"><label>Excentricidade central e <span class="unit">(cm)</span></label><input type="number" step="0.5" id="cabE" value="8"></div>
+          <div class="field"><label>Excentricidade na ancoragem <span class="unit">(cm)</span></label><input type="number" step="0.5" id="cabE0" value="0"></div>
+          <div class="field"><label>Cobrimento inferior livre <span class="unit">(cm)</span></label><input type="number" step="0.5" id="cabCinf" value="3.5"></div>
+        </div>
+        <div class="chart-wrap">
+          <canvas class="chart" id="cvCabo" style="height:400px"></canvas>
+        </div>
+        <div class="note" id="cabNote"></div>
+
+        <h3 style="color:#0b3d91;font-size:14px;margin:20px 0 6px">Verificação — carga de balanceamento w<sub>p</sub> = 8·P·e/L²</h3>
+        <div id="cabCalc"></div>
+
+        <div style="margin-top:18px">
+          <h3 style="color:#0b3d91;font-size:14px;margin:0 0 8px">Diagrama de carga de balanceamento</h3>
+          <canvas class="chart" id="cvBalance" style="height:180px"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-analise">
+      <div class="card">
+        <h2>Análise Estrutural</h2>
+        <div class="sub">Faixa de 1,00 m — sistema <span id="anaSis"></span>.</div>
+        <div class="chart-tabs" id="chartTabs">
+          <button data-chart="momento" class="active">Momento M(x)</button>
+          <button data-chart="cortante">Cortante V(x)</button>
+          <button data-chart="flecha">Flecha δ(x)</button>
+          <button data-chart="protensao">Força de protensão P(x)</button>
+          <button data-chart="tensao">Tensão na seção</button>
+        </div>
+        <div class="chart-wrap">
+          <canvas class="chart" id="cvMain" style="height:340px"></canvas>
+        </div>
+        <div class="results-grid" id="anaKPIs"></div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-verificacoes">
+      <div class="card">
+        <h2>Verificações — ELU</h2>
+        <div class="results-grid" id="eluBox"></div>
+        <div class="actions"><button class="btn ghost" id="btnELU">▶ Executar verificações ELU</button></div>
+      </div>
+      <div class="card">
+        <h2>Verificações — ELS</h2>
+        <div class="results-grid" id="elsBox"></div>
+        <div class="actions"><button class="btn ghost" id="btnELS">▶ Executar verificações ELS</button></div>
+      </div>
+      <div class="card">
+        <h2>Punção</h2>
+        <div class="grid">
+          <div class="field"><label>Dimensão do pilar a <span class="unit">(cm)</span></label><input type="number" step="1" id="puA" value="40"></div>
+          <div class="field"><label>Dimensão do pilar b <span class="unit">(cm)</span></label><input type="number" step="1" id="puB" value="40"></div>
+          <div class="field"><label>Reação no pilar <span class="unit">(kN)</span></label><input type="number" step="1" id="puF" value="250"></div>
+          <div class="field"><label>Momento no pilar <span class="unit">(kN.m)</span></label><input type="number" step="0.5" id="puM" value="0"></div>
+        </div>
+        <div class="results-grid" id="puBox"></div>
+        <div class="actions"><button class="btn ghost" id="btnPU">▶ Executar verificação de punção</button></div>
+      </div>
+      <div class="card">
+        <h2>Verificações Pendentes</h2>
+        <div class="warn" id="pendingBox">
+          Nenhuma verificação pendente registrada. Verifique o memorial para observações de hipóteses simplificadas.
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-detalhamento">
+      <div class="card">
+        <h2>Detalhamento Esquemático</h2>
+        <canvas id="cvDet" style="width:100%;height:340px;display:block"></canvas>
+        <div class="note" id="detNote"></div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-memorial">
+      <div class="card">
+        <h2>Memorial de Cálculo</h2>
+        <div class="actions">
+          <button class="btn ghost" id="btnMemAtualizar">🔄 Atualizar memorial</button>
+          <button class="btn gray" id="btnPDF2">📄 Imprimir / PDF</button>
+        </div>
+        <div id="memContent"></div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-resumo">
+      <div class="card">
+        <h2>Resultado do Projeto</h2>
+        <div class="results-grid" id="resumoBox"></div>
+        <div class="note">
+          <strong>Limitações:</strong> Este aplicativo é uma ferramenta de apoio ao projeto estrutural. O responsável técnico
+          deve conferir hipóteses, dados de entrada, aplicabilidade das normas, resultados e detalhamento antes da
+          utilização em projeto executivo.
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="app">
+  <strong>APavan Engenharia e Consultoria</strong> — Engenheiro Civil · Engenheiro de Segurança do Trabalho<br>
+  Ferramenta de apoio — NBR 6118:2023. Confira sempre os resultados antes do uso em projeto executivo.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================================
+   MOTOR DE CÁLCULO — inalterado
+   ========================================================================= */
+const Engine = (() => {
+  function concreto({ fck, gammaC = 25, alphaE = 1.0 }) {
+    const fcd = fck / 1.4;
+    const fctm = fck <= 50 ? 0.3 * Math.pow(fck, 2/3) : 2.12 * Math.log(1 + 0.11 * fck);
+    const fctkInf = 0.7 * fctm;
+    const Eci = alphaE * 5600 * Math.sqrt(fck);
+    const alphaI = Math.min(0.8 + 0.2 * fck / 80, 1.0);
+    const Ecs = alphaI * Eci;
+    return { fck, fcd, fctm, fctkInf, Eci, Ecs, alphaI, gammaC, alphaE };
+  }
+  function acoPassivo({ categoria }) {
+    const fyk = categoria === 'CA-60' ? 600 : 500;
+    const fyd = fyk / 1.15;
+    const Es = 210000;
+    const eyd = fyd / Es;
+    return { fyk, fyd, Es, eyd, gammaS: 1.15 };
+  }
+  function acoAtivo({ fptk, fp01k, Ep, tipoRelax = 'RB' }) {
+    return { fptk, fp01k, Ep, fpd: fp01k / 1.15, gammaS: 1.15, tipoRelax };
+  }
+  function geometria({ b, h, cobrimento, phiLongMm }) {
+    const d = h - cobrimento - phiLongMm / 20;
+    const A = b * h, I = b * Math.pow(h, 3) / 12, W = b * Math.pow(h, 2) / 6;
+    return { b, h, d, A, I, W, cobrimento };
+  }
+  function cargas(inp, concreto, geom) {
+    const gpp = inp.gammaC * (geom.h / 100);
+    const gCont = inp.contE/100 * inp.contG;
+    const gParede = (inp.parL > 0) ? (inp.parH * inp.parE * inp.parG * inp.parL) / (inp.Lx) : 0;
+    const gTotal = gpp + inp.rev + gCont + inp.outros + gParede;
+    return { gpp, gCont, gParede, gTotal, qTotal: inp.q, rev: inp.rev, outros: inp.outros };
+  }
+  function coefSistema(sis) {
+    switch (sis) {
+      case 'simples':    return { M: 1/8,   V: 1/2,  d: 5/384,  Msup: 0,     desc: 'Bi-apoiada (simples)' };
+      case 'continua':   return { M: 1/10,  V: 1/2,  d: 4/384,  Msup: 1/11,  desc: 'Contínua (vão interno)' };
+      case 'engastada':  return { M: 1/8,   V: 5/8,  d: 1/185,  Msup: 1/8,   desc: 'Engastada-apoiada' };
+      case 'biengastada':return { M: 1/24,  V: 1/2,  d: 1/384,  Msup: 1/12,  desc: 'Biengastada' };
+      case 'balanco':    return { M: 1/2,   V: 1,    d: 1/8,    Msup: 1/2,   desc: 'Balanço' };
+      default:           return { M: 1/8,   V: 1/2,  d: 5/384,  Msup: 0,     desc: '' };
+    }
+  }
+  function esforcosSolicitantes({ L, pELU, pSer, sis }) {
+    const c = coefSistema(sis);
+    return { Md: c.M * pELU * L * L, Msup: c.Msup * pELU * L * L,
+             Vd: c.V * pELU * L, Mser: c.M * pSer * L * L, coef: c };
+  }
+  function protensaoInicial({ Ap_total, sigmaP0 }) {
+    const P0 = Ap_total * sigmaP0 / 10;
+    return { P0, sigmaP0, Ap: Ap_total };
+  }
+  function perdas({ L, e_m, Ap_total, P0, sigmaP0, Ep, mu, k, slip_mm,
+                    ecs, phi, relaxPct, Ecs, geom, concreto, P0kN, fck }) {
+    const alpha = 8 * Math.abs(e_m) / L;
+    const kL = k * L;
+    const expo = mu * alpha + kL;
+    const P_fim = P0 * Math.exp(-expo);
+    const perdaAtr = P0 - P_fim;
+    const deltaSigmaAnc = 2 * Ep * slip_mm / (L * 1000);
+    const perdaAnc = deltaSigmaAnc * Ap_total / 10;
+    const sigmaCp = (P0 * 1000 / geom.A) / 100;
+    const deltaSigmaEl = (Ep / concreto.Eci) * sigmaCp;
+    const perdaEl = deltaSigmaEl * Ap_total / 10;
+    const deltaSigmaRet = Ep * Math.abs(ecs);
+    const perdaRet = deltaSigmaRet * Ap_total / 10;
+    const deltaSigmaFl = Ep * phi * sigmaCp / concreto.Eci;
+    const perdaFl = deltaSigmaFl * Ap_total / 10;
+    const deltaSigmaRel = relaxPct / 100 * sigmaP0;
+    const perdaRel = deltaSigmaRel * Ap_total / 10;
+    const perdaTotal = perdaAtr + perdaAnc + perdaEl + perdaRet + perdaFl + perdaRel;
+    return { P0, P_fim, atrito: perdaAtr, ancoragem: perdaAnc, encurtamento: perdaEl,
+             retracao: perdaRet, fluencia: perdaFl, relaxacao: perdaRel,
+             total: perdaTotal, Pef: P0 - perdaTotal,
+             alpha, expo, sigmaCp, deltaSigmaAnc, deltaSigmaEl, deltaSigmaRet, deltaSigmaFl, deltaSigmaRel };
+  }
+  function tensoesServico({ P, e_cm, M_ext, geom }) {
+    const sigAxial = -P / geom.A * 10;
+    const Mprot = P * e_cm / 100;
+    const Msag = M_ext - Mprot;
+    const sigFlex_sup = (+Msag) / geom.W * 10;
+    const sigFlex_inf = (-Msag) / geom.W * 10;
+    return { sigmaSup: sigAxial + sigFlex_sup, sigmaInf: sigAxial + sigFlex_inf,
+             sigAxial, Mprot, Msag, sigFlexSup: sigFlex_sup, sigFlexInf: sigFlex_inf };
+  }
+  function flechas({ L, g, q, psi2, P, e_m, Ecs, I_cm4, coefSis }) {
+    const EI = Ecs * 1000 * I_cm4 * 1e-8;
+    const gqp = g + psi2 * q;
+    const wPrest = 8 * P * e_m / (L * L);
+    const coef = coefSis.d;
+    const deltaCargas = coef * (gqp * Math.pow(L, 4)) / EI;
+    const deltaProt = coef * (wPrest * Math.pow(L, 4)) / EI;
+    const deltaTotal = deltaCargas - deltaProt;
+    const deltaRara = coef * ((g + q) * Math.pow(L, 4)) / EI;
+    return { EI, gqp, wPrest,
+             deltaCargas_m: deltaCargas, deltaProt_m: deltaProt,
+             deltaTotal_m: deltaTotal, deltaRara_m: deltaRara,
+             deltaCargas: deltaCargas * 1000, deltaProt: deltaProt * 1000,
+             deltaTotal: deltaTotal * 1000, deltaRara: deltaRara * 1000 };
+  }
+  function eluFlexao({ b_cm, d_cm, dp_cm, fcd, fyd, fpd, Md_kNm, As_cm2, Ap_cm2, geom }) {
+    const b_mm = b_cm * 10, d_mm = d_cm * 10, dp_mm = dp_cm * 10;
+    const As_mm2 = As_cm2 * 100, Ap_mm2 = Ap_cm2 * 100;
+    const T = As_mm2 * fyd + Ap_mm2 * fpd;
+    const x_mm = T / (0.68 * b_mm * fcd);
+    const zAs = d_mm - 0.4 * x_mm;
+    const zAp = dp_mm - 0.4 * x_mm;
+    const MRd = (As_mm2 * fyd * Math.max(zAs, 0) + Ap_mm2 * fpd * Math.max(zAp, 0)) / 1e6;
+    let As_req = 0;
+    if (Md_kNm > 0) {
+      let lo = 0, hi = 100;
+      for (let i = 0; i < 60; i++) {
+        const mid = (lo + hi) / 2;
+        const Asm = mid * 100;
+        const Tm = Asm * fyd + Ap_mm2 * fpd;
+        const xm = Tm / (0.68 * b_mm * fcd);
+        const MRdm = (Asm * fyd * Math.max(d_mm - 0.4*xm, 0) + Ap_mm2 * fpd * Math.max(dp_mm - 0.4*xm, 0)) / 1e6;
+        if (MRdm < Md_kNm) lo = mid; else hi = mid;
+      }
+      As_req = (lo + hi) / 2;
+    }
+    const util = Md_kNm / MRd;
+    return { MRd, x_mm, x_cm: x_mm/10, As_req, As_cm2, Ap_cm2, z: zAs/10,
+             status: MRd >= Md_kNm ? (util > 0.95 ? 'ATENÇÃO' : 'OK') : 'NÃO ATENDE',
+             utilization: util };
+  }
+  function asMin({ b_cm, h_cm }) {
+    return 0.0015 * b_cm * h_cm;
+  }
+  function puncao({ a_cm, b_cm, h_cm, d_cm, F_kN, M_kNm, fck, rho_As }) {
+    const d_mm = d_cm * 10;
+    const u_mm = 2 * (a_cm*10 + b_cm*10 + 4*d_mm);
+    const tauSd = (F_kN * 1000) / (u_mm * d_mm);
+    const rho = Math.max(rho_As, 0.001);
+    const tauRd1 = 0.13 * (1 + Math.sqrt(20/d_mm)) * Math.pow(100*rho*fck, 1/3);
+    const tauRd2 = 0.5 * (1 - fck/250) * (fck/1.4);
+    const status = tauSd <= tauRd1 ? 'OK' : (tauSd <= tauRd2 ? 'ATENÇÃO' : 'NÃO ATENDE');
+    return { u: u_mm/10, tauSd, tauRd1, tauRd2, status, utilization: tauSd/tauRd1,
+             note: 'Verificação simplificada — complementar manualmente. Não considera efeito favorável da protensão sobre a punção.' };
+  }
+  function vibracao({ L, Ecs, I_cm4, g_kNm2, q_kNm2, b_m = 1.0 }) {
+    const EI = Ecs * 1000 * I_cm4 * 1e-8;
+    const gTotal = g_kNm2 + 0.3 * q_kNm2;
+    const mBarKg = (gTotal * b_m) / 9.81 * 1000;
+    const f1 = (Math.PI / (2 * L * L)) * Math.sqrt((EI * 1000) / mBarKg);
+    return { f1, T1: 1 / f1, mBar: mBarKg };
+  }
+  return { concreto, acoPassivo, acoAtivo, geometria, cargas, esforcosSolicitantes,
+           coefSistema, protensaoInicial, perdas, tensoesServico, flechas,
+           eluFlexao, asMin, puncao, vibracao };
+})();
+
+/* ========================================================================= */
+const $ = id => document.getElementById(id);
+const $$ = sel => document.querySelectorAll(sel);
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+function fmt(v, d=2){ if(!isFinite(v)) return '—'; return Number(v).toFixed(d).replace('.', ','); }
+function kpiHTML(label, value, unit, status, detail){
+  const cls = status==='OK'?'ok':status==='ATENÇÃO'?'at':status==='NÃO ATENDE'?'no':'';
+  return `<div class="kpi">
+    <div class="lbl">${label}</div>
+    <div class="val">${value}<small>${unit||''}</small></div>
+    ${detail?`<div class="det">${detail}</div>`:''}
+    <span class="st ${cls}"></span>
+  </div>`;
+}
+
+/* ========================================================================= */
+function readInputs(){
+  const fck = parseFloat($('mFck').value);
+  const alphaE = parseFloat($('mAlphaE').value);
+  const gammaC = parseFloat($('mGammaC').value);
+  const Lx = parseFloat($('gLx').value);
+  const Ly = parseFloat($('gLy').value);
+  const h  = parseFloat($('gH').value);
+  const b  = parseFloat($('gB').value);
+  const c  = parseFloat($('gC').value);
+  const sis = $('gSis').value;
+  const dir = $('gDir').value;
+  const phiLong = parseFloat($('mPhiLong').value);
+  const phiTrans = parseFloat($('mPhiTrans').value);
+  const categoria = $('mCategoria').value;
+  const cord = $('pCord').value.split('|');
+  const phiCord = parseFloat(cord[0]);
+  const Ap1 = parseFloat(cord[1]);
+  const fptk = parseFloat(cord[2]);
+  const fp01k = parseFloat(cord[3]);
+  const Ep = parseFloat(cord[4]);
+  const tipoRelax = $('pCord').value.includes('RN') ? 'RN' : 'RB';
+  const nCord = parseInt($('pN').value);
+  const nCabos = parseInt($('pNCabos').value);
+  const Ap_cabo = Ap1 * nCord;
+  const Ap_total = Ap_cabo * nCabos;
+  // Fonte única: lê cabE (aba Traçado do Cabo) e mantém pE em sincronia
+const e_cm = parseFloat($('cabE').value) || parseFloat($('pE').value) || 0;
+  const sigmaP0 = parseFloat($('pSigma0').value);
+  const mu = parseFloat($('pMu').value);
+  const kk = parseFloat($('pK').value);
+  const slip = parseFloat($('pSlip').value);
+  const ecs = parseFloat($('pEcs').value);
+  const phi = parseFloat($('pPhi').value);
+  const relaxPct = parseFloat($('pRelax').value);
+  const gammaCarga = parseFloat($('cGammaC').value);
+  const rev = parseFloat($('cRev').value);
+  const contE = parseFloat($('cContE').value);
+  const contG = parseFloat($('cContG').value);
+  const outros = parseFloat($('cOutros').value);
+  const parH = parseFloat($('cParH').value);
+  const parE = parseFloat($('cParE').value);
+  const parG = parseFloat($('cParG').value);
+  const parL = parseFloat($('cParL').value);
+  const q = parseFloat($('cQ').value);
+  const gammaG = parseFloat($('cGG').value);
+  const gammaQ = parseFloat($('cGQ').value);
+  const psi1 = parseFloat($('cPsi1').value);
+  const psi2 = parseFloat($('cPsi2').value);
+  return { fck, alphaE, gammaC, Lx, Ly, h, b, c, sis, dir,
+    phiLong, phiTrans, categoria, phiCord, Ap1, fptk, fp01k, Ep, tipoRelax,
+    nCord, nCabos, Ap_cabo, Ap_total, e_cm, sigmaP0,
+    mu, k: kk, slip, ecs, phi, relaxPct,
+    gammaCarga, rev, contE, contG, outros, parH, parE, parG, parL, q,
+    gammaG, gammaQ, psi1, psi2 };
+}
+
+/* ========================================================================= */
+function calcularTudo(){
+  const inp = readInputs();
+  const conc = Engine.concreto({ fck: inp.fck, gammaC: inp.gammaC, alphaE: inp.alphaE });
+  const acoP = Engine.acoPassivo({ categoria: inp.categoria });
+  const acoA = Engine.acoAtivo({ fptk: inp.fptk, fp01k: inp.fp01k, Ep: inp.Ep, tipoRelax: inp.tipoRelax });
+  const geom = Engine.geometria({ b: inp.b, h: inp.h, cobrimento: inp.c, phiLongMm: inp.phiLong });
+  const car = Engine.cargas({
+    gammaC: inp.gammaCarga, contE: inp.contE, contG: inp.contG,
+    rev: inp.rev, outros: inp.outros,
+    parH: inp.parH, parE: inp.parE, parG: inp.parG, parL: inp.parL,
+    q: inp.q, Lx: inp.Lx
+  }, conc, geom);
+  const pSer = car.gTotal + car.qTotal;
+  const pQP  = car.gTotal + inp.psi2 * car.qTotal;
+  const pFreq = car.gTotal + inp.psi1 * car.qTotal;
+  const pELU = inp.gammaG * car.gTotal + inp.gammaQ * car.qTotal;
+  const esf = Engine.esforcosSolicitantes({ L: inp.Lx, pELU, pSer, sis: inp.sis });
+  const prot = Engine.protensaoInicial({ Ap_total: inp.Ap_total, sigmaP0: inp.sigmaP0 });
+  const perdas = Engine.perdas({
+    L: inp.Lx, e_m: inp.e_cm / 100, Ap_total: inp.Ap_total,
+    P0: prot.P0, sigmaP0: inp.sigmaP0, Ep: inp.Ep,
+    mu: inp.mu, k: inp.k, slip_mm: inp.slip,
+    ecs: inp.ecs, phi: inp.phi, relaxPct: inp.relaxPct,
+    Ecs: conc.Ecs, geom, concreto: conc, fck: inp.fck
+  });
+  const Mqp = Engine.coefSistema(inp.sis).M * pQP * inp.Lx * inp.Lx;
+  const Mser = Engine.coefSistema(inp.sis).M * pSer * inp.Lx * inp.Lx;
+  const tensQP = Engine.tensoesServico({ P: perdas.Pef, e_cm: inp.e_cm, M_ext: Mqp, geom });
+  const tensRara = Engine.tensoesServico({ P: perdas.Pef, e_cm: inp.e_cm, M_ext: Mser, geom });
+  const fle = Engine.flechas({
+    L: inp.Lx, g: car.gTotal, q: car.qTotal, psi2: inp.psi2,
+    P: perdas.Pef, e_m: inp.e_cm / 100,
+    Ecs: conc.Ecs, I_cm4: geom.I, coefSis: Engine.coefSistema(inp.sis)
+  });
+  const As_min = Engine.asMin({ b_cm: inp.b, h_cm: inp.h });
+  const dp_cm = geom.d;
+  const elu = Engine.eluFlexao({
+    b_cm: inp.b, d_cm: geom.d, dp_cm,
+    fcd: conc.fcd, fyd: acoP.fyd, fpd: acoA.fpd,
+    Md_kNm: esf.Md, As_cm2: As_min, Ap_cm2: inp.Ap_total, geom
+  });
+  const limTração = 1.5 * conc.fctkInf;
+  const limCompQP = 0.6 * inp.fck;
+  const limCompRara = 0.7 * inp.fck;
+  const flechaAdm = inp.Lx * 1000 / 250;
+  const vib = Engine.vibracao({ L: inp.Lx, Ecs: conc.Ecs, I_cm4: geom.I,
+    g_kNm2: car.gTotal, q_kNm2: car.qTotal });
+  let pu = null;
+  if ($('puF').value) {
+    pu = Engine.puncao({
+      a_cm: parseFloat($('puA').value), b_cm: parseFloat($('puB').value),
+      h_cm: inp.h, d_cm: geom.d,
+      F_kN: parseFloat($('puF').value), M_kNm: parseFloat($('puM').value),
+      fck: inp.fck, rho_As: 0.005
+    });
+  }
+  const sigLimites = {
+    op: Math.min(0.77 * inp.fptk, 0.90 * inp.fp01k),
+    imed: 0.74 * inp.fptk,
+    servico: 0.65 * inp.fptk
+  };
+  const sigmaServico = perdas.Pef / inp.Ap_total * 10;
+  const sigmaImed = (prot.P0 - (perdas.atrito + perdas.ancoragem + perdas.encurtamento)) / inp.Ap_total * 10;
+  return { inp, conc, acoP, acoA, geom, car, pSer, pQP, pFreq, pELU,
+    esf, prot, perdas, tensQP, tensRara, fle, As_min, elu, vib, pu,
+    dp_cm, Mqp, Mser, limTração, limCompQP, limCompRara, flechaAdm,
+    sigLimites, sigmaServico, sigmaImed };
+}
+
+/* =========================================================================
+   GRÁFICOS GENÉRICOS
+   ========================================================================= */
+let currentChart = 'momento';
+
+function plotCanvas(canvas, xArr, series, opts={}){
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.clientWidth || 600;
+  const H = canvas.clientHeight || 260;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+  const pad = {l:70, r:20, t:34, b:38};
+  const cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
+  let ymin = Infinity, ymax = -Infinity;
+  for (const s of series) for (const v of s.data){
+    if (!isFinite(v)) continue;
+    if (v < ymin) ymin = v; if (v > ymax) ymax = v;
+  }
+  if (!isFinite(ymin)) { ymin = 0; ymax = 1; }
+  if (ymin === ymax){ ymin -= 1; ymax += 1; }
+  const yr0 = ymax - ymin;
+  ymin -= yr0 * 0.08; ymax += yr0 * 0.08;
+  const xmin = xArr[0], xmax = xArr[xArr.length-1];
+  const xr = (xmax - xmin) || 1;
+  const X = x => pad.l + (x - xmin)/xr * cw;
+  const Y = y => pad.t + (ymax - y)/(ymax - ymin) * ch;
+  ctx.strokeStyle = '#eef2f7'; ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++){
+    const y = pad.t + i*ch/5;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+cw, y); ctx.stroke();
+    const val = ymax - (i/5)*(ymax-ymin);
+    ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText(val.toFixed(2).replace('.',','), pad.l-8, y);
+  }
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.beginPath();
+  ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t+ch); ctx.lineTo(pad.l+cw, pad.t+ch);
+  ctx.stroke();
+  if (ymin < 0 && ymax > 0){
+    const y0 = Y(0);
+    ctx.strokeStyle = '#cbd5e1'; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(pad.l, y0); ctx.lineTo(pad.l+cw, y0); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let i = 0; i <= 5; i++){
+    const x = pad.l + i*cw/5;
+    const val = xmin + (i/5)*xr;
+    ctx.fillText(val.toFixed(2).replace('.',','), x, pad.t+ch+8);
+  }
+  ctx.fillStyle = '#64748b'; ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText(opts.xlabel || 'Posição (m)', pad.l + cw/2, pad.t+ch+22);
+  for (const s of series){
+    ctx.strokeStyle = s.color || '#2563eb';
+    ctx.lineWidth = s.width || 2;
+    ctx.beginPath();
+    for (let i = 0; i < xArr.length; i++){
+      const px = X(xArr[i]), py = Y(s.data[i]);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+  }
+  let lx = pad.l + 8;
+  const ly = pad.t - 16;
+  ctx.font = '11px sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  for (const s of series){
+    ctx.fillStyle = s.color;
+    ctx.fillRect(lx, ly-4, 12, 8);
+    ctx.fillStyle = '#334155';
+    const tw = ctx.measureText(s.label).width;
+    ctx.fillText(s.label, lx + 16, ly);
+    lx += 16 + tw + 14;
+  }
+}
+
+function renderChart(tipo, R){
+  const canvas = $('cvMain');
+  if (!canvas) return;
+  const L = R.inp.Lx;
+  const N = 81;
+  const xArr = Array.from({length:N}, (_,i)=> i*L/(N-1));
+  let series = [];
+  if (tipo === 'momento'){
+    const qg = R.car.gTotal, qq = R.car.qTotal;
+    const fM = (q) => xArr.map(x => q * x * (L - x) / 2);
+    const MprotArr = xArr.map(x => -R.perdas.Pef * R.inp.e_cm/100);
+    const Mext = fM(qg + qq);
+    const Mtotal = Mext.map((v,i) => v + MprotArr[i]);
+    series = [
+      { label:'M permanente', data: fM(qg), color:'#64748b' },
+      { label:'M variável',  data: fM(qq), color:'#94a3b8', width:1.6 },
+      { label:'M protensão', data: MprotArr, color:'#dc2626', width:2 },
+      { label:'M total', data: Mtotal, color:'#0b3d91', width:2.4 }
+    ];
+  } else if (tipo === 'cortante'){
+    const fV = (q) => xArr.map(x => q*(L/2 - x));
+    const wp = 8 * R.perdas.Pef * (R.inp.e_cm/100) / (L*L);
+    const VprotArr = xArr.map(x => -wp*(L/2 - x));
+    series = [
+      { label:'V cargas (g+q)', data: fV(R.car.gTotal + R.car.qTotal), color:'#0b3d91' },
+      { label:'V protensão',   data: VprotArr, color:'#dc2626' }
+    ];
+  } else if (tipo === 'flecha'){
+    const EI = R.fle.EI;
+    const q = R.car.gTotal + R.inp.psi2 * R.car.qTotal;
+    const wp = R.fle.wPrest;
+    const delta = (qq) => xArr.map(x => (qq * x * (L*L*L - 2*L*x*x + x*x*x) / (24*EI)) * 1000);
+    const dC = delta(q);
+    const dP = delta(-wp);
+    const dT = dC.map((v,i) => v + dP[i]);
+    series = [
+      { label:'δ cargas', data: dC, color:'#0b3d91' },
+      { label:'δ protensão', data: dP, color:'#dc2626' },
+      { label:'δ resultante', data: dT, color:'#16a34a', width:2.4 }
+    ];
+  } else if (tipo === 'protensao'){
+    const alpha = 8 * (R.inp.e_cm/100) / L;
+    const Pfun = xArr.map(x => R.prot.P0 * Math.exp(-(R.inp.mu*alpha + R.inp.k*x)));
+    const PefArr = xArr.map(x => R.perdas.Pef);
+    series = [
+      { label:'P(x) após atrito', data: Pfun, color:'#0b3d91' },
+      { label:'P efetiva', data: PefArr, color:'#16a34a', width:2 }
+    ];
+  } else if (tipo === 'tensao'){
+    const W = R.geom.W, A = R.geom.A;
+    const P = R.perdas.Pef;
+    const q = R.car.gTotal + R.car.qTotal;
+    const Mext = xArr.map(x => q * x * (L - x) / 2);
+    const Mp = P * R.inp.e_cm / 100;
+    const sigAx = -P / A * 10;
+    const sigSup = Mext.map(M => sigAx + (M - Mp) / W * 10);
+    const sigInf = Mext.map(M => sigAx - (M - Mp) / W * 10);
+    series = [
+      { label:'σ superior', data: sigSup, color:'#0b3d91' },
+      { label:'σ inferior', data: sigInf, color:'#dc2626' }
+    ];
+  }
+  plotCanvas(canvas, xArr, series, { xlabel: 'Posição (m)' });
+}
+
+/* =========================================================================
+   NOVO — SEÇÃO LONGITUDINAL DO CABO
+   ========================================================================= */
+function renderCaboSection(R){
+  const cv = $('cvCabo');
+  if (!cv) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.clientWidth || 800;
+  const H = 400;
+  cv.style.height = H + 'px';
+  cv.width = W*dpr; cv.height = H*dpr;
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+
+  const L = R.inp.Lx;
+  const h = R.inp.h;
+  const c = R.inp.c;
+  const e = parseFloat($('cabE').value) || R.inp.e_cm || 0;
+  const e0 = parseFloat($('cabE0').value) || 0;
+  const cInf = parseFloat($('cabCinf').value) || 3.5;
+  const forma = $('cabForma').value;
+
+  // Padding grande em baixo para as dimensões e setas
+  const pad = {l:80, r:60, t:70, b:120};
+  const cw = W - pad.l - pad.r;
+  const ch = H - pad.t - pad.b;
+
+  const X = x => pad.l + (x/L)*cw;                       // x em m
+  const Y = y => pad.t + (1 - y/h)*ch;                   // y em cm (0 = face inferior)
+
+  // Fundo da laje
+  const grd = ctx.createLinearGradient(0, pad.t, 0, pad.t+ch);
+  grd.addColorStop(0, '#e8eef7');
+  grd.addColorStop(1, '#dde6f2');
+  ctx.fillStyle = grd;
+  ctx.fillRect(pad.l, pad.t, cw, ch);
+  ctx.strokeStyle = '#0b3d91'; ctx.lineWidth = 2.5;
+  ctx.strokeRect(pad.l, pad.t, cw, ch);
+
+  // Hachura do concreto (leve)
+  ctx.save();
+  ctx.beginPath(); ctx.rect(pad.l, pad.t, cw, ch); ctx.clip();
+  ctx.strokeStyle = 'rgba(11,61,145,.08)'; ctx.lineWidth = 1;
+  for (let i = -ch; i < cw; i += 12){
+    ctx.beginPath();
+    ctx.moveTo(pad.l + i, pad.t);
+    ctx.lineTo(pad.l + i + ch, pad.t + ch);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Linha CG (tracejada)
+  ctx.strokeStyle = '#94a3b8'; ctx.setLineDash([6,5]); ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(pad.l, Y(h/2)); ctx.lineTo(pad.l+cw, Y(h/2));
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#64748b'; ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  ctx.fillText('CG', pad.l - 8, Y(h/2));
+
+  // Cobrimentos (tracejado fino)
+  ctx.strokeStyle = '#cbd5e1'; ctx.setLineDash([3,3]); ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad.l, Y(h - c)); ctx.lineTo(pad.l+cw, Y(h - c));
+  ctx.moveTo(pad.l, Y(cInf)); ctx.lineTo(pad.l+cw, Y(cInf));
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Armadura passiva superior (verde)
+  const nBars = Math.max(12, Math.floor(cw/45));
+  ctx.fillStyle = '#16a34a';
+  for(let i=0;i<nBars;i++){
+    const x = pad.l + (i+0.5)/nBars*cw;
+    ctx.beginPath();
+    ctx.arc(x, Y(h - c - 0.7), 3.5, 0, 2*Math.PI);
+    ctx.fill();
+  }
+  // Armadura passiva inferior (vermelho)
+  ctx.fillStyle = '#dc2626';
+  for(let i=0;i<nBars;i++){
+    const x = pad.l + (i+0.5)/nBars*cw;
+    ctx.beginPath();
+    ctx.arc(x, Y(cInf + 0.7), 3.5, 0, 2*Math.PI);
+    ctx.fill();
+  }
+
+  // Traçado do cabo (parábola / reto / segmentado)
+  const N = 120;
+  const cablePts = [];
+  for (let i=0;i<=N;i++){
+    const t = i/N;
+    const x = t*L;
+    let yCable;
+    if (forma === 'reto'){
+      yCable = h/2 - e;
+    } else if (forma === 'parabolico'){
+      const a = (e - e0) / Math.pow(L/2, 2);
+      const dx = x - L/2;
+      yCable = (h/2 - e) + a * dx * dx;
+    } else { // segmentado
+      yCable = h/2 - e0 - (e - e0) * (1 - Math.abs(2*t - 1));
+    }
+    cablePts.push({x, y: yCable});
+  }
+
+  // Sombra/brilho do cabo
+  ctx.strokeStyle = 'rgba(245,158,11,.25)'; ctx.lineWidth = 7;
+  ctx.beginPath();
+  for (let i=0;i<cablePts.length;i++){
+    const px = X(cablePts[i].x), py = Y(cablePts[i].y);
+    if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+  // Cabo principal
+  ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let i=0;i<cablePts.length;i++){
+    const px = X(cablePts[i].x), py = Y(cablePts[i].y);
+    if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+
+  // Ancoragens
+  function drawAnc(x, y){
+    ctx.fillStyle = '#0b3d91';
+    ctx.beginPath(); ctx.arc(x, y, 9, 0, 2*Math.PI); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(x, y, 3, 0, 2*Math.PI); ctx.fill();
+  }
+  drawAnc(X(0), Y(cablePts[0].y));
+  drawAnc(X(L), Y(cablePts[cablePts.length-1].y));
+
+  // Setas da carga de balanceamento (para cima)
+  const wP = R.perdas.Pef * 8 * (e/100) / (L*L);
+  ctx.strokeStyle = '#1560c4'; ctx.fillStyle = '#1560c4'; ctx.lineWidth = 1.6;
+  const nArr = 11;
+  for (let i=0;i<nArr;i++){
+    const t = (i+0.5)/nArr;
+    const x = pad.l + t*cw;
+    const y0 = pad.t + ch + 22;
+    const y1 = pad.t + ch + 52;
+    ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x-5, y1+4); ctx.lineTo(x, y1-5); ctx.lineTo(x+5, y1+4);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.font = 'bold 12px sans-serif'; ctx.fillStyle = '#1560c4';
+  ctx.textAlign = 'center';
+  ctx.fillText(`w_p = ${fmt(wP,2)} kN/m ↑`, pad.l + cw/2, pad.t + ch + 68);
+
+  // Dimensão L
+  const yDim = pad.t + ch + 92;
+  ctx.strokeStyle = '#334155'; ctx.fillStyle = '#334155'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad.l, yDim); ctx.lineTo(pad.l+cw, yDim);
+  ctx.moveTo(pad.l, yDim-5); ctx.lineTo(pad.l, yDim+5);
+  ctx.moveTo(pad.l+cw, yDim-5); ctx.lineTo(pad.l+cw, yDim+5);
+  ctx.stroke();
+  ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(`L = ${fmt(L,2)} m`, pad.l + cw/2, yDim+16);
+
+  // Dimensão h (esquerda)
+  ctx.strokeStyle = '#334155';
+  const xDim = pad.l - 22;
+  ctx.beginPath();
+  ctx.moveTo(xDim, pad.t); ctx.lineTo(xDim, pad.t+ch);
+  ctx.moveTo(xDim-5, pad.t); ctx.lineTo(xDim+5, pad.t);
+  ctx.moveTo(xDim-5, pad.t+ch); ctx.lineTo(xDim+5, pad.t+ch);
+  ctx.stroke();
+  ctx.save();
+  ctx.translate(pad.l - 42, pad.t + ch/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center';
+  ctx.font = '12px sans-serif';
+  ctx.fillText(`h = ${fmt(h,1)} cm`, 0, 0);
+  ctx.restore();
+
+  // Cota da excentricidade e (no meio)
+  const xMid = X(L/2);
+  const yCG = Y(h/2);
+  const yCab = Y(cablePts[Math.floor(N/2)].y);
+  ctx.strokeStyle = '#dc2626'; ctx.fillStyle = '#dc2626';
+  ctx.beginPath();
+  ctx.moveTo(xMid+18, yCG); ctx.lineTo(xMid+18, yCab);
+  ctx.moveTo(xMid+13, yCG); ctx.lineTo(xMid+23, yCG);
+  ctx.moveTo(xMid+13, yCab); ctx.lineTo(xMid+23, yCab);
+  ctx.stroke();
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(`e = ${fmt(e,2)} cm`, xMid+28, (yCG+yCab)/2 + 4);
+
+  // Título
+  ctx.fillStyle = '#0b3d91';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('SEÇÃO LONGITUDINAL DA LAJE — Traçado do Cabo de Protensão', pad.l, 26);
+  ctx.font = '11px sans-serif';
+  ctx.fillStyle = '#64748b';
+  ctx.fillText(`Forma: ${forma === 'parabolico' ? 'parabólica' : forma === 'reto' ? 'reta' : 'segmentada'}  ·  b = ${fmt(R.inp.b,0)} cm  ·  c = ${fmt(c,2)} cm (sup)  ·  c,inf = ${fmt(cInf,2)} cm`, pad.l, 44);
+
+  // Legenda
+  let lx = pad.l, ly = 58;
+  ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
+  const legend = [
+    {cor:'#f59e0b', txt:'Cabo de protensão'},
+    {cor:'#dc2626', txt:'Arm. passiva inferior'},
+    {cor:'#16a34a', txt:'Arm. passiva superior'}
+  ];
+  for (const l of legend){
+    ctx.fillStyle = l.cor;
+    ctx.fillRect(lx, ly-4, 12, 8);
+    ctx.fillStyle = '#334155';
+    ctx.fillText(l.txt, lx+16, ly);
+    lx += 16 + ctx.measureText(l.txt).width + 18;
+  }
+
+  // NOTA com cálculo w_p
+  const formulaHtml = `
+    <b>Equação (traçado parabólico equivalente):</b><br>
+    <span style="font-family:ui-monospace,monospace;font-size:13px;color:#0b3d91">
+      w<sub>p</sub> = 8 · P · e / L²
+    </span><br>
+    <b>Substituição:</b><br>
+    <span style="font-family:ui-monospace,monospace;font-size:12.5px">
+      w<sub>p</sub> = 8 × ${fmt(R.perdas.Pef,2)} kN × ${fmt(e/100,3)} m ÷ (${fmt(L,2)} m)²
+    </span><br>
+    <b>Resultado:</b> <span style="color:#16a34a;font-weight:700">w<sub>p</sub> = ${fmt(wP,3)} kN/m (↑ para cima)</span>
+    &nbsp;— carga equivalente de balanceamento.<br>
+    <span style="font-size:11.5px;color:#64748b">
+      Comentário: com excentricidade central e = ${fmt(e,2)} cm, a parábola tem flecha igual a
+      ${fmt(e - e0,2)} cm em relação ao cabo nas ancoragens (e<sub>0</sub> = ${fmt(e0,2)} cm).
+      A força de protensão P<sub>ef</sub> = ${fmt(R.perdas.Pef,1)} kN exerce carga uniformemente distribuída
+      equivalente para cima, aliviando o momento fletor positivo da laje.
+    </span>
+  `;
+  $('cabNote').innerHTML = `Traçado ${forma} — ${R.inp.nCabos} cabo(s) de ${R.inp.nCord} cordoalhas Ø${fmt(R.inp.phiCord,1)} mm.`;
+  $('cabCalc').innerHTML = `<div class="note">${formulaHtml}</div>`;
+
+  // Diagrama de carga de balanceamento
+  const cvB = $('cvBalance');
+  if (cvB){
+    const W2 = cvB.clientWidth || 800;
+    const H2 = 180;
+    cvB.width = W2*dpr; cvB.height = H2*dpr;
+    cvB.style.height = H2+'px';
+    const ctx2 = cvB.getContext('2d');
+    ctx2.setTransform(dpr,0,0,dpr,0,0);
+    ctx2.clearRect(0,0,W2,H2);
+    const p2 = {l:80, r:40, t:34, b:44};
+    const cw2 = W2 - p2.l - p2.r, ch2 = H2 - p2.t - p2.b;
+    const yZero = p2.t + ch2/2;
+    // eixo zero
+    ctx2.strokeStyle = '#cbd5e1'; ctx2.setLineDash([4,4]);
+    ctx2.beginPath(); ctx2.moveTo(p2.l, yZero); ctx2.lineTo(p2.l+cw2, yZero); ctx2.stroke();
+    ctx2.setLineDash([]);
+    // eixos
+    ctx2.strokeStyle = '#94a3b8';
+    ctx2.beginPath();
+    ctx2.moveTo(p2.l, p2.t); ctx2.lineTo(p2.l, p2.t+ch2); ctx2.lineTo(p2.l+cw2, p2.t+ch2);
+    ctx2.stroke();
+    // setas para cima
+    ctx2.strokeStyle = '#1560c4'; ctx2.fillStyle = '#1560c4'; ctx2.lineWidth = 1.6;
+    const hMax = ch2 * 0.35;
+    for (let i=0;i<12;i++){
+      const x = p2.l + (i+0.5)/12*cw2;
+      const y0 = yZero;
+      const y1 = yZero - hMax;
+      ctx2.beginPath(); ctx2.moveTo(x, y0); ctx2.lineTo(x, y1); ctx2.stroke();
+      ctx2.beginPath();
+      ctx2.moveTo(x-5, y1+6); ctx2.lineTo(x, y1-3); ctx2.lineTo(x+5, y1+6);
+      ctx2.closePath(); ctx2.fill();
+    }
+    // linha base da carga
+    ctx2.strokeStyle = '#0b3d91'; ctx2.lineWidth = 2.4;
+    ctx2.beginPath();
+    ctx2.moveTo(p2.l, yZero - hMax); ctx2.lineTo(p2.l+cw2, yZero - hMax);
+    ctx2.stroke();
+    // textos
+    ctx2.fillStyle = '#0b3d91'; ctx2.font = 'bold 12px sans-serif';
+    ctx2.textAlign = 'left';
+    ctx2.fillText(`w_p = ${fmt(wP,3)} kN/m ↑ (uniforme)`, p2.l, p2.t - 8);
+    ctx2.fillStyle = '#64748b'; ctx2.font = '11px sans-serif';
+    ctx2.textAlign = 'center';
+    ctx2.fillText('x (m)', p2.l + cw2/2, H2 - 8);
+    ctx2.textAlign = 'right';
+    ctx2.fillText('0', p2.l - 6, yZero + 4);
+    // valores L nas extremidades
+    ctx2.textAlign = 'center';
+    ctx2.fillText('0', p2.l, p2.t+ch2+16);
+    ctx2.fillText(fmt(L,2), p2.l+cw2, p2.t+ch2+16);
+  }
+}
+
+/* ========================================================================= */
+function renderGeometria(R){
+  const g = R.geom;
+  $('geoNote').innerHTML = `<b>Seção:</b> A = ${fmt(g.A,0)} cm² · I = ${fmt(g.I,0)} cm⁴ · W = ${fmt(g.W,0)} cm³ · d = ${fmt(g.d,2)} cm<br>
+    <b>Faixa:</b> ${fmt(R.inp.b,0)} × ${fmt(R.inp.h,0)} cm | <b>Sistema:</b> ${Engine.coefSistema(R.inp.sis).desc}`;
+}
+function renderMateriais(R){
+  const c = R.conc;
+  $('matNote').innerHTML = `f<sub>ck</sub> = ${fmt(R.inp.fck,0)} MPa · f<sub>cd</sub> = ${fmt(c.fcd,2)} MPa · f<sub>ctm</sub> = ${fmt(c.fctm,3)} MPa · E<sub>ci</sub> = ${fmt(c.Eci,0)} MPa · E<sub>cs</sub> = ${fmt(c.Ecs,0)} MPa<br>Aço: ${R.inp.categoria} (f<sub>yd</sub> = ${fmt(R.acoP.fyd,1)} MPa) | Ativo: f<sub>ptk</sub> = ${fmt(R.inp.fptk,0)} MPa`;
+}
+function renderProtensao(R){
+  $('protNote').innerHTML = `Cabo: ${R.inp.nCord} × Ø${fmt(R.inp.phiCord,1)} mm (Ap/cabo = ${fmt(R.inp.Ap_cabo,3)} cm²) · ${R.inp.nCabos} cabos · Ap,total = <b>${fmt(R.inp.Ap_total,3)} cm²</b><br>P<sub>0</sub> = <b>${fmt(R.prot.P0,1)} kN</b>`;
+}
+function renderAnalise(R){
+  $('anaSis').textContent = Engine.coefSistema(R.inp.sis).desc;
+  const items = [
+    {l:'M<sub>d</sub> (ELU)', v:fmt(R.esf.Md,2), u:'kN.m/m', s:'OK'},
+    {l:'V<sub>d</sub> (ELU)', v:fmt(R.esf.Vd,2), u:'kN/m', s:'OK'},
+    {l:'M<sub>ser</sub>', v:fmt(R.esf.Mser,2), u:'kN.m/m', s:'OK'},
+    {l:'P<sub>0</sub>', v:fmt(R.prot.P0,1), u:'kN', s:'OK'},
+    {l:'P<sub>ef</sub>', v:fmt(R.perdas.Pef,1), u:'kN', s:'OK'},
+    {l:'Perdas', v:fmt(R.perdas.total/R.prot.P0*100,1), u:'%', s: R.perdas.total/R.prot.P0 < 0.25 ? 'OK' : 'ATENÇÃO'},
+    {l:'w<sub>p</sub>', v:fmt(R.perdas.Pef * 8 * (R.inp.e_cm/100) / (R.inp.Lx*R.inp.Lx), 3), u:'kN/m', s:'OK'},
+    {l:'Flecha', v:fmt(R.fle.deltaTotal,2), u:'mm', s: Math.abs(R.fle.deltaTotal) <= R.flechaAdm ? 'OK' : 'NÃO ATENDE'},
+    {l:'Contraflecha', v:fmt(R.fle.deltaProt,2), u:'mm', s:'OK'},
+    {l:'f1', v:fmt(R.vib.f1,2), u:'Hz', s: R.vib.f1 >= 4 ? 'OK' : 'ATENÇÃO'}
+  ];
+  $('anaKPIs').innerHTML = items.map(i=>kpiHTML(i.l,i.v,i.u,i.s)).join('');
+  renderChart('momento', R);
+}
+
+function renderDetalhamento(R){
+  const cv = $('cvDet');
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.clientWidth || 600, H = cv.clientHeight || 340;
+  cv.width = W*dpr; cv.height = H*dpr;
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+  const pad = 30, cw = W - 2*pad, ch = H - 2*pad;
+  ctx.strokeStyle = '#0b3d91'; ctx.lineWidth = 2;
+  ctx.strokeRect(pad, pad, cw, ch);
+  ctx.strokeStyle = '#1560c4'; ctx.lineWidth = 1.6; ctx.setLineDash([8,5]);
+  for (let i = 1; i <= R.inp.nCabos; i++){
+    const y = pad + i*ch/(R.inp.nCabos+1);
+    ctx.beginPath(); ctx.moveTo(pad+6, y); ctx.lineTo(pad+cw-6, y); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  ctx.strokeStyle = '#dc2626'; ctx.lineWidth = 1.2;
+  for (let i = 0; i < 12; i++){
+    const y = pad + ch - 10 - i*4;
+    ctx.beginPath(); ctx.moveTo(pad+10, y); ctx.lineTo(pad+cw-10, y); ctx.stroke();
+  }
+  ctx.strokeStyle = '#16a34a';
+  for (let i = 0; i < 6; i++){
+    const y = pad + 10 + i*4;
+    ctx.beginPath(); ctx.moveTo(pad+10, y); ctx.lineTo(pad+cw-10, y); ctx.stroke();
+  }
+  ctx.fillStyle = '#0b3d91';
+  ctx.fillRect(pad-4, ch/2 + pad - 12, 8, 24);
+  ctx.fillRect(pad+cw-4, ch/2 + pad - 12, 8, 24);
+  ctx.fillStyle = '#334155'; ctx.font = '12px sans-serif';
+  ctx.fillText(`Laje ${fmt(R.inp.Lx,2)} × ${fmt(R.inp.Ly,2)} m · h = ${fmt(R.inp.h,0)} cm`, pad, H-8);
+  ctx.fillText(`Cabos: ${R.inp.nCabos} × ${R.inp.nCord}×Ø${fmt(R.inp.phiCord,1)} mm`, pad+cw-240, H-8);
+  $('detNote').innerHTML = `<b>Arm. inferior</b> = ${fmt(R.As_min,2)} cm²/m · <b>Arm. superior</b> = ${fmt(R.As_min,2)} cm²/m · Cabos: <b>${R.inp.nCabos}</b> × ${R.inp.nCord}Ø${fmt(R.inp.phiCord,1)} mm`;
+}
+
+function renderELU(R){
+  const e = R.elu;
+  const items = [
+    kpiHTML('M<sub>Rd</sub> (flexão)', fmt(e.MRd,2), 'kN.m/m', e.status, `Md = ${fmt(R.esf.Md,2)} · Util. ${fmt(e.utilization*100,1)}%`),
+    kpiHTML('x (L.N.)', fmt(e.x_cm,2), 'cm', e.x_cm <= 0.45*R.geom.d ? 'OK' : 'ATENÇÃO', `x/d = ${fmt(e.x_cm/R.geom.d,3)} (lim. 0,45)`),
+    kpiHTML('As,min', fmt(R.As_min,2), 'cm²/m', 'OK', 'ρs ≥ 0,15% bh'),
+    kpiHTML('As req.', fmt(Math.max(e.As_req,0),2), 'cm²/m', 'OK', `Adotado ${fmt(R.As_min,2)}`)
+  ];
+  $('eluBox').innerHTML = items.join('');
+}
+function renderELS(R){
+  const items = [
+    kpiHTML('σ sup (QP)', fmt(R.tensQP.sigmaSup,2), 'MPa', R.tensQP.sigmaSup >= -R.limCompQP ? 'OK' : 'NÃO ATENDE', `Lim. ${fmt(-R.limCompQP,2)}`),
+    kpiHTML('σ inf (QP)', fmt(R.tensQP.sigmaInf,2), 'MPa', R.tensQP.sigmaInf >= -R.limCompQP ? 'OK' : 'NÃO ATENDE', `Lim. ${fmt(-R.limCompQP,2)}`),
+    kpiHTML('σ máx. tração (rara)', fmt(Math.max(0,R.tensRara.sigmaSup,R.tensRara.sigmaInf),2), 'MPa', Math.max(0,R.tensRara.sigmaSup,R.tensRara.sigmaInf) <= R.limTração ? 'OK' : 'ATENÇÃO', `Lim. ${fmt(R.limTração,2)}`),
+    kpiHTML('Flecha', fmt(R.fle.deltaTotal,2), 'mm', Math.abs(R.fle.deltaTotal) <= R.flechaAdm ? 'OK' : 'NÃO ATENDE', `Lim. ${fmt(R.flechaAdm,1)} (L/250)`),
+    kpiHTML('δ/L', fmt(Math.abs(R.fle.deltaTotal)/(R.inp.Lx*1000),5), '—', Math.abs(R.fle.deltaTotal) <= R.flechaAdm ? 'OK' : 'NÃO ATENDE', 'Lim. 1/250'),
+    kpiHTML('σ<sub>p</sub> serviço', fmt(R.sigmaServico,1), 'MPa', R.sigmaServico <= R.sigLimites.servico ? 'OK' : 'ATENÇÃO', `Lim. ${fmt(R.sigLimites.servico,0)}`)
+  ];
+  $('elsBox').innerHTML = items.join('');
+}
+function renderPU(R){
+  if (!R.pu) return;
+  const p = R.pu;
+  $('puBox').innerHTML = [
+    kpiHTML('u (2d)', fmt(p.u,1), 'cm', 'OK', 'Perímetro crítico'),
+    kpiHTML('τ<sub>Sd</sub>', fmt(p.tauSd,3), 'MPa', p.status, `τRd1 = ${fmt(p.tauRd1,3)} · τRd2 = ${fmt(p.tauRd2,3)}`),
+    kpiHTML('Utilização', fmt(p.utilization*100,1), '%', p.status, p.note)
+  ].join('');
+}
+
+/* ========================================================================= */
+function renderMemorial(R){
+  const M = [];
+  const push = t => M.push(t);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">1. Identificação</h3><p>${$('pNome').value} — ${$('pCliente').value} — ${$('pResp').value} — ${$('pData').value || '—'}</p>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">2. Norma</h3><p>ABNT NBR 6118:2023</p>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">3. Geometria</h3><pre class="code">Lx = ${fmt(R.inp.Lx,2)} m | Ly = ${fmt(R.inp.Ly,2)} m | h = ${fmt(R.inp.h,0)} cm | b = ${fmt(R.inp.b,0)} cm
+d = ${fmt(R.geom.d,2)} cm
+A = ${fmt(R.geom.A,0)} cm² | I = ${fmt(R.geom.I,0)} cm⁴ | W = ${fmt(R.geom.W,0)} cm³</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">4. Materiais</h3><pre class="code">fck = ${fmt(R.inp.fck,0)} MPa | fcd = ${fmt(R.conc.fcd,2)} MPa | fctm = ${fmt(R.conc.fctm,3)} MPa
+Eci = ${fmt(R.conc.Eci,0)} MPa | Ecs = ${fmt(R.conc.Ecs,0)} MPa
+fyd = ${fmt(R.acoP.fyd,1)} MPa | fpd = ${fmt(R.acoA.fpd,1)} MPa</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">5. Cargas</h3><pre class="code">g = ${fmt(R.car.gTotal,2)} kN/m² (inclui pp = ${fmt(R.car.gpp,2)})
+q = ${fmt(R.car.qTotal,2)} kN/m²</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">6. Combinações</h3><pre class="code">pd (ELU) = ${fmt(R.pELU,2)} kN/m²
+p (rara) = ${fmt(R.pSer,2)} kN/m²
+p (QP)   = ${fmt(R.pQP,2)} kN/m²</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">7. Esforços</h3><pre class="code">Md = ${fmt(R.esf.Md,2)} kN.m/m
+Vd = ${fmt(R.esf.Vd,2)} kN/m
+Mser = ${fmt(R.esf.Mser,2)} kN.m/m</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">8. Protensão</h3><pre class="code">Ap,total = ${fmt(R.inp.Ap_total,3)} cm²
+P0 = Ap·σp0/10 = ${fmt(R.inp.Ap_total,3)}·${fmt(R.inp.sigmaP0,0)}/10 = ${fmt(R.prot.P0,1)} kN
+e = ${fmt(R.inp.e_cm,2)} cm
+Mprot = Pe·e = ${fmt(R.perdas.Pef,1)}·${fmt(R.inp.e_cm/100,3)} = ${fmt(R.perdas.Pef*R.inp.e_cm/100,2)} kN.m/m</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">9. Traçado parabólico e carga de balanceamento</h3>
+    <pre class="code">w_p = 8·P·e/L²
+w_p = 8·${fmt(R.perdas.Pef,1)}·${fmt(R.inp.e_cm/100,3)}/${fmt(R.inp.Lx,2)}² = ${fmt(R.perdas.Pef*8*(R.inp.e_cm/100)/(R.inp.Lx*R.inp.Lx),3)} kN/m (para cima)</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">10. Perdas de protensão</h3>
+    <table class="tbl"><thead><tr><th>Perda</th><th class="num">kN</th><th class="num">%</th></tr></thead><tbody>
+    <tr><td>Atrito</td><td class="num">${fmt(R.perdas.atrito,2)}</td><td class="num">${fmt(R.perdas.atrito/R.prot.P0*100,2)}</td></tr>
+    <tr><td>Ancoragem</td><td class="num">${fmt(R.perdas.ancoragem,2)}</td><td class="num">${fmt(R.perdas.ancoragem/R.prot.P0*100,2)}</td></tr>
+    <tr><td>Encurtamento</td><td class="num">${fmt(R.perdas.encurtamento,2)}</td><td class="num">${fmt(R.perdas.encurtamento/R.prot.P0*100,2)}</td></tr>
+    <tr><td>Retração</td><td class="num">${fmt(R.perdas.retracao,2)}</td><td class="num">${fmt(R.perdas.retracao/R.prot.P0*100,2)}</td></tr>
+    <tr><td>Fluência</td><td class="num">${fmt(R.perdas.fluencia,2)}</td><td class="num">${fmt(R.perdas.fluencia/R.prot.P0*100,2)}</td></tr>
+    <tr><td>Relaxação</td><td class="num">${fmt(R.perdas.relaxacao,2)}</td><td class="num">${fmt(R.perdas.relaxacao/R.prot.P0*100,2)}</td></tr>
+    <tr><td><b>Total</b></td><td class="num"><b>${fmt(R.perdas.total,2)}</b></td><td class="num"><b>${fmt(R.perdas.total/R.prot.P0*100,2)}</b></td></tr>
+    </tbody></table><p>Pe = <b>${fmt(R.perdas.Pef,1)} kN</b></p>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">11. Tensões de serviço</h3><pre class="code">σ sup (rara) = ${fmt(R.tensRara.sigmaSup,3)} MPa
+σ inf (rara) = ${fmt(R.tensRara.sigmaInf,3)} MPa
+Lim. compressão: ${fmt(R.limCompRara,2)} MPa
+Lim. tração: ${fmt(R.limTração,2)} MPa</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">12. ELU flexão</h3><pre class="code">Md = ${fmt(R.esf.Md,2)} kN.m/m
+As,min = ${fmt(R.As_min,2)} cm²/m
+MRd = ${fmt(R.elu.MRd,2)} kN.m/m  (Util. ${fmt(R.elu.utilization*100,1)}%)
+Status: ${R.elu.status}</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">13. Flechas</h3><pre class="code">EI = ${fmt(R.fle.EI,0)} kN.m²
+δcargas = ${fmt(R.fle.deltaCargas,2)} mm
+δprot   = ${fmt(R.fle.deltaProt,2)} mm (↑)
+δtotal  = ${fmt(R.fle.deltaTotal,2)} mm
+δadm    = ${fmt(R.flechaAdm,1)} mm</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">14. Vibração</h3><pre class="code">f1 = ${fmt(R.vib.f1,2)} Hz
+T1 = ${fmt(R.vib.T1,3)} s</pre>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">15. Punção</h3>`);
+  if (R.pu){
+    push(`<pre class="code">u(2d) = ${fmt(R.pu.u,1)} cm
+τSd = ${fmt(R.pu.tauSd,3)} MPa
+τRd1 = ${fmt(R.pu.tauRd1,3)} MPa  |  τRd2 = ${fmt(R.pu.tauRd2,3)} MPa
+Status: ${R.pu.status}
+${R.pu.note}</pre>`);
+  } else push(`<p><i>Não aplicável.</i></p>`);
+  push(`<h3 style="color:#0b3d91;margin-top:20px">16. Hipóteses e limitações</h3>
+    <ul style="font-size:12.5px;color:#334155">
+    <li>Modelo estrutural simplificado: faixa de 1,00 m.</li>
+    <li>Carga de balanceamento w_p = 8·P·e/L² assume traçado parabólico com flecha e constante.</li>
+    <li>Perdas por atrito, ancoragem e encurtamento em formulação simplificada.</li>
+    <li>Punção verificada de forma simplificada, sem efeito favorável da protensão.</li>
+    <li>Não substitui a análise estrutural definitiva.</li>
+    </ul>`);
+  $('memContent').innerHTML = M.join('');
+}
+
+function renderResumo(R){
+  const items = [
+    {l:'Laje', v: `${fmt(R.inp.Lx,2)}×${fmt(R.inp.Ly,2)}`, u:'m', s:'OK', d:`h = ${fmt(R.inp.h,0)} cm`},
+    {l:'f<sub>ck</sub>', v: fmt(R.inp.fck,0), u:'MPa', s:'OK'},
+    {l:'P<sub>0</sub>', v: fmt(R.prot.P0,1), u:'kN', s:'OK'},
+    {l:'P<sub>ef</sub>', v: fmt(R.perdas.Pef,1), u:'kN', s:'OK'},
+    {l:'Perdas', v: fmt(R.perdas.total/R.prot.P0*100,1), u:'%', s: R.perdas.total/R.prot.P0 < 0.25 ? 'OK' : 'ATENÇÃO'},
+    {l:'w<sub>p</sub>', v: fmt(R.perdas.Pef*8*(R.inp.e_cm/100)/(R.inp.Lx*R.inp.Lx),3), u:'kN/m', s:'OK'},
+    {l:'Cordoalhas', v: `${R.inp.nCabos} × ${R.inp.nCord}Ø${fmt(R.inp.phiCord,1)}`, u:'mm', s:'OK'},
+    {l:'As', v: fmt(R.As_min,2), u:'cm²/m', s:'OK'},
+    {l:'M<sub>sd</sub>', v: fmt(R.esf.Md,2), u:'kN.m/m', s:'OK'},
+    {l:'V<sub>sd</sub>', v: fmt(R.esf.Vd,2), u:'kN/m', s:'OK'},
+    {l:'Flecha', v: fmt(R.fle.deltaTotal,2), u:'mm', s: Math.abs(R.fle.deltaTotal) <= R.flechaAdm ? 'OK' : 'NÃO ATENDE'},
+    {l:'Contraflecha', v: fmt(R.fle.deltaProt,2), u:'mm', s:'OK'},
+    {l:'ELU', v: R.elu.status, u:'', s: R.elu.status},
+    {l:'ELS', v: (Math.abs(R.fle.deltaTotal) <= R.flechaAdm && R.tensRara.sigmaSup <= R.limTração) ? 'OK' : 'ATENÇÃO', u:'', s:'OK'},
+    {l:'Punção', v: R.pu ? R.pu.status : '—', u:'', s: R.pu ? R.pu.status : 'OK'},
+    {l:'f1', v: fmt(R.vib.f1,2), u:'Hz', s: R.vib.f1 >= 4 ? 'OK' : 'ATENÇÃO'}
+  ];
+  $('resumoBox').innerHTML = items.map(i => kpiHTML(i.l, i.v, i.u, i.s, i.d)).join('');
+}
+
+/* ========================================================================= */
+function preDimensionar(){
+  const L = parseFloat($('gLx').value);
+  const q = parseFloat($('cQ').value);
+  const hSug = Math.ceil((L * 100 / 42) / 2) * 2;
+  const eSug = 0.4 * hSug / 2;
+  const gSug = 25 * hSug/100;
+  const pSug = gSug + q;
+  const Pbal = 0.7 * pSug * L * L / (8 * eSug/100);
+  const P1 = 0.987 * 1400 / 10;
+  const nCabosSug = Math.max(1, Math.ceil(Math.round(Pbal / P1 / 4) * 4 / 4));
+  const AsPrel = 0.0015 * 100 * hSug;
+  $('gH').value = hSug;
+  $('pE').value = eSug.toFixed(1);
+  $('cabE').value = eSug.toFixed(1);
+  $('pSigma0').value = 1400;
+  $('pN').value = 4;
+  $('pNCabos').value = nCabosSug;
+  toast('Pré-dimensionamento aplicado.');
+  alert(`PRÉ-DIMENSIONAMENTO
+Laje: ${L.toFixed(2)} × ${parseFloat($('gLy').value).toFixed(2)} m
+Carga total: ${pSug.toFixed(2)} kN/m²
+h sugerido: ${hSug} cm
+Excentricidade: ${eSug.toFixed(1)} cm
+P balanceamento: ${Pbal.toFixed(0)} kN
+Cabos sugeridos: ${nCabosSug} × 4 Ø12,7 mm
+As preliminar: ${AsPrel.toFixed(2)} cm²/m
+
+RESULTADO DE PRÉ-DIMENSIONAMENTO — não substitui o dimensionamento estrutural definitivo.`);
+}
+
+/* ========================================================================= */
+function coletarFormulario(){
+  return {
+    identificacao: { nome: $('pNome').value, cliente: $('pCliente').value, responsavel: $('pResp').value, data: $('pData').value },
+    geometry: { Lx: $('gLx').value, Ly: $('gLy').value, h: $('gH').value, b: $('gB').value, c: $('gC').value, sis: $('gSis').value, dir: $('gDir').value },
+    materials: { fck: $('mFck').value, gammaC: $('mGammaC').value, alphaE: $('mAlphaE').value, categoria: $('mCategoria').value, phiLong: $('mPhiLong').value, phiTrans: $('mPhiTrans').value },
+    loads: { gammaC: $('cGammaC').value, rev: $('cRev').value, contE: $('cContE').value, contG: $('cContG').value, outros: $('cOutros').value,
+      parH: $('cParH').value, parE: $('cParE').value, parG: $('cParG').value, parL: $('cParL').value, q: $('cQ').value,
+      gammaG: $('cGG').value, gammaQ: $('cGQ').value, psi1: $('cPsi1').value, psi2: $('cPsi2').value },
+    prestressing: { tipo: $('pTipo').value, ader: $('pAder').value, cord: $('pCord').value, nCord: $('pN').value, nCabos: $('pNCabos').value, e: $('pE').value, sigma0: $('pSigma0').value,
+      mu: $('pMu').value, k: $('pK').value, slip: $('pSlip').value, ecs: $('pEcs').value, phi: $('pPhi').value, relax: $('pRelax').value },
+    cabo: { forma: $('cabForma').value, e: $('cabE').value, e0: $('cabE0').value, cInf: $('cabCinf').value },
+    puncao: { a: $('puA').value, b: $('puB').value, F: $('puF').value, M: $('puM').value },
+    _ts: new Date().toISOString()
+  };
+}
+function aplicarFormulario(d){
+  if (!d) return;
+  const set = (id, v) => { const el = $(id); if (el && v !== undefined && v !== null) el.value = v; };
+  if (d.identificacao) Object.entries({pNome:'nome',pCliente:'cliente',pResp:'responsavel',pData:'data'}).forEach(([k,v])=>set(k,d.identificacao[v]));
+  if (d.geometry) Object.entries({gLx:'Lx',gLy:'Ly',gH:'h',gB:'b',gC:'c',gSis:'sis',gDir:'dir'}).forEach(([k,v])=>set(k,d.geometry[v]));
+  if (d.materials) Object.entries({mFck:'fck',mGammaC:'gammaC',mAlphaE:'alphaE',mCategoria:'categoria',mPhiLong:'phiLong',mPhiTrans:'phiTrans'}).forEach(([k,v])=>set(k,d.materials[v]));
+  if (d.loads) Object.entries({cGammaC:'gammaC',cRev:'rev',cContE:'contE',cContG:'contG',cOutros:'outros',cParH:'parH',cParE:'parE',cParG:'parG',cParL:'parL',cQ:'q',cGG:'gammaG',cGQ:'gammaQ',cPsi1:'psi1',cPsi2:'psi2'}).forEach(([k,v])=>set(k,d.loads[v]));
+  if (d.prestressing) Object.entries({pTipo:'tipo',pAder:'ader',pCord:'cord',pN:'nCord',pNCabos:'nCabos',pE:'e',pSigma0:'sigma0',pMu:'mu',pK:'k',pSlip:'slip',pEcs:'ecs',pPhi:'phi',pRelax:'relax'}).forEach(([k,v])=>set(k,d.prestressing[v]));
+  if (d.cabo){ set('cabForma',d.cabo.forma); set('cabE',d.cabo.e); set('cabE0',d.cabo.e0); set('cabCinf',d.cabo.cInf); }
+  if (d.puncao) Object.entries({puA:'a',puB:'b',puF:'F',puM:'M'}).forEach(([k,v])=>set(k,d.puncao[v]));
+}
+function salvarLocal(){
+  localStorage.setItem('apavan_laje_v2', JSON.stringify(coletarFormulario()));
+  toast('Projeto salvo localmente.');
+}
+function abrirLocal(){
+  const raw = localStorage.getItem('apavan_laje_v2') || localStorage.getItem('apavan_laje_v1');
+  if (!raw) return;
+  try { aplicarFormulario(JSON.parse(raw)); toast('Projeto carregado.'); }
+  catch(e){ /* silencioso */ }
+}
+
+/* ========================================================================= */
+let lastR = null;
+function calcularCompleto(){
+  const faltas = [];
+  if (!isFinite(parseFloat($('gLx').value))) faltas.push('Informe o vão Lx.');
+  if (!isFinite(parseFloat($('gH').value))) faltas.push('Informe h.');
+  if (!isFinite(parseFloat($('mFck').value))) faltas.push('Informe fck.');
+  if (!isFinite(parseFloat($('pNCabos').value))) faltas.push('Informe nº de cabos.');
+  if (!isFinite(parseFloat($('pSigma0').value))) faltas.push('Informe σp0.');
+  if (faltas.length){ alert('⚠ ' + faltas.join('\n⚠ ')); return; }
+
+  const steps = ['geom','mat','carga','prot','perdas','analise','elu','els','flecha','punc'];
+  steps.forEach(s => { const el = document.querySelector(`.steps span[data-step="${s}"]`); if (el) el.classList.remove('done'); });
+  let i = 0;
+  const bar = $('progBar');
+  bar.style.width = '0%';
+  (function passo(){
+    if (i >= steps.length){ bar.style.width = '100%'; return; }
+    const el = document.querySelector(`.steps span[data-step="${steps[i]}"]`);
+    if (el) el.classList.add('done');
+    i++; bar.style.width = (i / steps.length * 100) + '%';
+    setTimeout(passo, 50);
+  })();
+
+  lastR = calcularTudo();
+  renderGeometria(lastR);
+  renderMateriais(lastR);
+  renderProtensao(lastR);
+  renderCaboSection(lastR);
+  renderAnalise(lastR);
+  renderELU(lastR);
+  renderELS(lastR);
+  renderPU(lastR);
+  renderDetalhamento(lastR);
+  renderMemorial(lastR);
+  renderResumo(lastR);
+  toast('Cálculo concluído.');
+}
+
+/* =========================================================================
+   EVENTOS
+   ========================================================================= */
+$$('nav.side button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $$('nav.side button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const sec = btn.dataset.sec;
+    $$('.section').forEach(s => s.classList.remove('active'));
+    $('sec-' + sec).classList.add('active');
+    if (sec === 'analise' && lastR) renderChart(currentChart, lastR);
+    if (sec === 'detalhamento' && lastR) renderDetalhamento(lastR);
+    if (sec === 'cabos' && lastR) renderCaboSection(lastR);
+    if (window.innerWidth <= 840) $('sideNav').classList.remove('open');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+$('menuBtn').addEventListener('click', () => $('sideNav').classList.toggle('open'));
+$$('#chartTabs button').forEach(b => {
+  b.addEventListener('click', () => {
+    $$('#chartTabs button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentChart = b.dataset.chart;
+    if (lastR) renderChart(currentChart, lastR);
+  });
+});
+$('btnCalcular').addEventListener('click', calcularCompleto);
+$('btnPreDim').addEventListener('click', preDimensionar);
+$('btnSalvar').addEventListener('click', salvarLocal);
+$('btnAbrir').addEventListener('click', abrirLocal);
+$('btnNovo').addEventListener('click', () => { if (confirm('Criar novo projeto? Dados não salvos serão perdidos.')) location.reload(); });
+$('btnELU').addEventListener('click', () => { if (lastR){ renderELU(lastR); toast('ELU atualizado.'); } else toast('Calcule primeiro.'); });
+$('btnELS').addEventListener('click', () => { if (lastR){ renderELS(lastR); toast('ELS atualizado.'); } else toast('Calcule primeiro.'); });
+$('btnPU').addEventListener('click', () => { if (lastR){ renderPU(lastR); toast('Punção verificada.'); } else toast('Calcule primeiro.'); });
+$('btnMemAtualizar').addEventListener('click', () => { if (lastR) renderMemorial(lastR); });
+$('btnPDF').addEventListener('click', () => window.print());
+$('btnPDF2').addEventListener('click', () => window.print());
+$('btnExportJSON').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(coletarFormulario(), null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = ($('pNome').value || 'projeto') + '.json';
+  a.click(); URL.revokeObjectURL(url);
+});
+$('btnImportJSON').addEventListener('click', () => $('fileImport').click());
+$('fileImport').addEventListener('change', (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  const reader = new FileReader();
+  reader.onload = ev => { try { aplicarFormulario(JSON.parse(ev.target.result)); toast('Projeto importado.'); } catch(err){ toast('Arquivo inválido.'); } };
+  reader.readAsText(f);
+});
+
+// Auto-recalcula em alterações de geometria/protensão/cabo
+/* --- Sincronização da excentricidade entre pE (Protensão) e cabE (Traçado) --- */
+function syncExcentricidade(src){
+  const other = src === 'pE' ? 'cabE' : 'pE';
+  const v = $(src).value;
+  if ($(other).value !== v) $(other).value = v;
+}
+// Garante sincronia inicial
+syncExcentricidade('pE');
+
+/* --- Re-renderização completa após qualquer alteração --- */
+function reRenderAll(){
+  if (!lastR) return;
+  lastR = calcularTudo();
+  renderGeometria(lastR);
+  renderMateriais(lastR);
+  renderProtensao(lastR);       // ← atualiza a nota "Cabo: X × Ø..."
+  renderCaboSection(lastR);     // ← atualiza a seção da laje
+  renderAnalise(lastR);
+  renderELU(lastR);
+  renderELS(lastR);
+  renderPU(lastR);
+  renderDetalhamento(lastR);
+  renderResumo(lastR);
+}
+
+/* --- Listeners: usam 'input' para reagir a cada digitação --- */
+const camposAutoCalc = ['gLx','gH','gB','gC','cQ','pE','pSigma0','pNCabos','pN',
+                        'cabE','cabE0','cabCinf','cabForma','mFck','mCategoria',
+                        'pCord','pMu','pK','pSlip','pEcs','pPhi','pRelax'];
+camposAutoCalc.forEach(id => {
+  const el = $(id);
+  if (!el) return;
+  const evt = el.tagName === 'SELECT' ? 'change' : 'input';
+  el.addEventListener(evt, () => {
+    if (id === 'pE' || id === 'cabE') syncExcentricidade(id);
+    reRenderAll();
+  });
+});
+
+$('pData').value = new Date().toISOString().slice(0,10);
+
+/* =========================================================================
+   PWA — ícone no estilo AP + manifest + service worker
+   ========================================================================= */
+const ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#0a3a80"/>
+      <stop offset="0.45" stop-color="#0f4ea8"/>
+      <stop offset="1" stop-color="#1976d2"/>
+    </linearGradient>
+    <linearGradient id="glossGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="0.6" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bgGrad)"/>
+  <rect width="512" height="512" rx="116" fill="url(#glossGrad)"/>
+  <text x="256" y="268" font-family="Helvetica, Arial, sans-serif" font-size="200" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="-6">AP</text>
+  <text x="256" y="348" font-family="Helvetica, Arial, sans-serif" font-size="52" font-weight="600" fill="#ffffff" text-anchor="middle" letter-spacing="2">PROTENSÃO</text>
+  <g fill="#7eb6ff">
+    <circle cx="160" cy="406" r="11"/>
+    <circle cx="208" cy="406" r="11"/>
+    <circle cx="256" cy="406" r="11"/>
+    <circle cx="304" cy="406" r="11"/>
+    <circle cx="352" cy="406" r="11"/>
+  </g>
+</svg>`;
+
+function svgToPng(svgStr, size = 512){
+  return new Promise((resolve) => {
+    try {
+      const blob = new Blob([svgStr], {type:'image/svg+xml;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const c = document.createElement('canvas');
+          c.width = size; c.height = size;
+          const ctx = c.getContext('2d');
+          ctx.drawImage(img, 0, 0, size, size);
+          URL.revokeObjectURL(url);
+          resolve(c.toDataURL('image/png'));
+        } catch(e){ URL.revokeObjectURL(url); resolve(null); }
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+      img.src = url;
+    } catch(e){ resolve(null); }
+  });
+}
+
+(async function initPWA(){
+  const svgUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(ICON_SVG);
+  // favicon
+  const fav = $('favicon-link');
+  if (fav) fav.href = svgUrl;
+  // apple-touch-icon em PNG (melhor compatibilidade iOS)
+  const png = await svgToPng(ICON_SVG, 180);
+  if (png){
+    $('apple-icon').href = png;
+  } else {
+    // fallback SVG
+    $('apple-icon').href = svgUrl;
+  }
+  // PNG em 512 para o manifest
+  const png512 = await svgToPng(ICON_SVG, 512) || png;
+
+  const manifest = {
+    name: "AP Protensão — Laje Protendida",
+    short_name: "AP Protensão",
+    description: "Cálculo e análise de lajes protendidas — NBR 6118:2023",
+    lang: "pt-BR",
+    start_url: ".",
+    scope: ".",
+    display: "standalone",
+    orientation: "any",
+    background_color: "#0b3d91",
+    theme_color: "#0b3d91",
+    icons: [
+      { src: png512 || svgUrl, sizes: "512x512", type: png512 ? "image/png" : "image/svg+xml", purpose: "any" },
+      { src: png512 || svgUrl, sizes: "512x512", type: png512 ? "image/png" : "image/svg+xml", purpose: "maskable" },
+      { src: png || svgUrl, sizes: "180x180", type: png ? "image/png" : "image/svg+xml", purpose: "any" }
+    ]
+  };
+  const mBlob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+  $('manifest-link').href = URL.createObjectURL(mBlob);
+
+  // Service Worker inline (data URL)
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      self.addEventListener('install', e => self.skipWaiting());
+      self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+      self.addEventListener('fetch', e => {
+        if (e.request.method !== 'GET') return;
+        e.respondWith(
+          caches.open('apavan-v2').then(c =>
+            c.match(e.request).then(r => r || fetch(e.request).then(resp => {
+              if (resp.ok && (new URL(e.request.url).origin === location.origin)) c.put(e.request, resp.clone());
+              return resp;
+            }).catch(() => c.match(e.request)))
+          )
+        );
+      });
+    `;
+    try {
+      const swBlob = new Blob([swCode], {type:'application/javascript'});
+      const swURL = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swURL).catch(()=>{});
+    } catch(e) {}
+  }
+
+  // Prompt de instalação
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const pill = $('installPill');
+    pill.style.display = 'inline-block';
+    pill.style.cursor = 'pointer';
+    pill.addEventListener('click', async () => {
+      pill.style.display = 'none';
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+    });
+  });
+})();
+
+/* =========================================================================
+   INICIALIZAÇÃO
+   ========================================================================= */
+window.addEventListener('load', () => {
+  abrirLocal();
+  setTimeout(calcularCompleto, 200);
+});
+</script>
+</body>
+</html>
